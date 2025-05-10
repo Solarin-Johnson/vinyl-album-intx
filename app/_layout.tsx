@@ -14,8 +14,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { View } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
-
-import HeaderButton from "@/components/ui/HeaderButton";
+import { GestureHandlerRootView } from "react-native-gesture-handler";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -46,31 +45,26 @@ export default function RootLayout() {
   }
 
   return (
-    <>
+    <GestureHandlerRootView style={{ flex: 1 }}>
       <SafeAreaProvider>
         <ThemeProvider
           value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
         >
-          <ThemedView style={{ flex: 1 }}>
-            <View
-              style={{ flex: 1, maxWidth: 500, width: "100%", margin: "auto" }}
-            >
-              <Stack>
-                <Stack.Screen
-                  name="index"
-                  options={{
-                    headerShadowVisible: false,
-                    headerStyle: {
-                      backgroundColor: bg,
-                    },
-                  }}
-                />
-              </Stack>
-            </View>
-          </ThemedView>
+          <Stack>
+            <Stack.Screen
+              name="index"
+              options={{
+                headerShadowVisible: false,
+                headerStyle: {
+                  backgroundColor: bg,
+                },
+              }}
+            />
+          </Stack>
+
           <StatusBar style="auto" />
         </ThemeProvider>
       </SafeAreaProvider>
-    </>
+    </GestureHandlerRootView>
   );
 }

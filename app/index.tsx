@@ -1,7 +1,6 @@
 import React from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
-import { ThemedText } from "@/components/ThemedText";
 import Animated, {
   useDerivedValue,
   useSharedValue,
@@ -11,6 +10,7 @@ import Header from "@/components/ui/Header";
 import { layoutConfig } from "@/constants";
 import { useSize } from "@/hooks/useSize";
 import Vinyl from "@/components/ui/Vinyl";
+import { ALBUM } from "@/constants/data";
 
 export default function Index() {
   const scrollY = useSharedValue(0);
@@ -43,7 +43,7 @@ export default function Index() {
           }}
           layout={layoutConfig}
         >
-          <Vinyl opened={vinylOpened} />
+          <Vinyl opened={vinylOpened} imageUrl={ALBUM.coverUrl} />
         </Animated.ScrollView>
       </ThemedView>
     </>

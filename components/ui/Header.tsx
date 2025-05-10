@@ -6,6 +6,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SharedValue } from "react-native-reanimated";
+import { isWeb } from "@/constants";
 
 const Header: React.FC<{ show: SharedValue<boolean> }> = ({ show }) => {
   const bg = useThemeColor({}, "background");
@@ -21,12 +22,11 @@ const Header: React.FC<{ show: SharedValue<boolean> }> = ({ show }) => {
   );
 
   return (
-    <View style={{ backgroundColor: bg, paddingTop: top }}>
+    <View style={{ backgroundColor: bg, paddingTop: isWeb ? 24 : top + 16 }}>
       <View style={styles.container}>
         <HeaderButton>
           <AntDesign name="arrowleft" {...iconProps} />
         </HeaderButton>
-        <Text style={styles.title}>Vinyl Album</Text>
         <HeaderButton>
           <Feather name="more-horizontal" {...iconProps} />
         </HeaderButton>
@@ -41,11 +41,6 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
     // alignItems: "center",
-  },
-  title: {
-    color: "#fff",
-    fontSize: 24,
-    fontWeight: "bold",
   },
 });
 

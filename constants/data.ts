@@ -16,7 +16,7 @@ type Album = {
   title: string;
   artist: string;
   releaseDate: string;
-  coverUrl?: string;
+  coverUrl: string;
   discs: Disc[];
 };
 

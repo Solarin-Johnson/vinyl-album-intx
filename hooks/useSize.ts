@@ -1,4 +1,9 @@
-import { ALBUM_PEEK_HEIGHT, HEADER_HEIGHT, VINYL_PAD } from "@/constants";
+import {
+  ALBUM_PEEK_HEIGHT,
+  HEADER_HEIGHT,
+  isWeb,
+  VINYL_PAD,
+} from "@/constants";
 import { useState, useEffect } from "react";
 import { useWindowDimensions } from "react-native";
 import { useMemo } from "react";
@@ -13,19 +18,23 @@ type Sizes = {
 
 export const useSize = (): Sizes => {
   const { width, height } = useWindowDimensions();
-  const { top } = useSafeAreaInsets();
+  const top = isWeb ? Math.min(64, height / 20) : useSafeAreaInsets().top;
 
   const header_full = useMemo(() => HEADER_HEIGHT + top, [top]);
   const vinyl_height = useMemo(
-    () => (height - ALBUM_PEEK_HEIGHT - header_full) / 2,
-    [top, header_full]
+    () =>
+      Math.min(
+        360,
+        Math.max(240, (height - ALBUM_PEEK_HEIGHT - header_full) / 2)
+      ),
+    [top, header_full, height]
   );
 
   return useMemo(
     () => ({
       HEADER_FULL_HEIGHT: header_full,
-      VINYL_HEIGHT_CLOSED: vinyl_height + VINYL_PAD * 2,
-      VINYL_HEIGHT_OPEN: vinyl_height * 2 + VINYL_PAD * 2.5,
+      VINYL_HEIGHT_CLOSED: vinyl_height,
+      VINYL_HEIGHT_OPEN: vinyl_height * 2 + VINYL_PAD,
       VINYL_HEIGHT: vinyl_height,
     }),
     [width, height]
