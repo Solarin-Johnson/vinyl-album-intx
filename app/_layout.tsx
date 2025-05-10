@@ -14,8 +14,8 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { View } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
-import Feather from "@expo/vector-icons/Feather";
-import AntDesign from "@expo/vector-icons/AntDesign";
+
+import HeaderButton from "@/components/ui/HeaderButton";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -24,15 +24,6 @@ export default function RootLayout() {
   const colorScheme = useColorScheme();
   const [loaded] = useFonts({});
   const bg = useThemeColor({}, "background");
-  const text = useThemeColor({}, "text");
-
-  const iconProps = useMemo(
-    () => ({
-      size: 24,
-      color: text + "99",
-    }),
-    [text]
-  );
 
   useEffect(() => {
     const configureSplashScreen = async () => {
@@ -69,13 +60,6 @@ export default function RootLayout() {
                   name="index"
                   options={{
                     headerShadowVisible: false,
-                    title: "",
-                    headerLeft: () => (
-                      <AntDesign name="arrowleft" {...iconProps} />
-                    ),
-                    headerRight: () => (
-                      <Feather name="more-horizontal" {...iconProps} />
-                    ),
                     headerStyle: {
                       backgroundColor: bg,
                     },
