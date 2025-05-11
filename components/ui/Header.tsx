@@ -23,7 +23,8 @@ const Header: React.FC<{
 }> = ({ show, imageUrl, title }) => {
   const bg = useThemeColor({}, "background");
   const text = useThemeColor({}, "text");
-  const top = isWeb ? 0 : useSafeAreaInsets().top;
+  const insets = useSafeAreaInsets();
+  const top = isWeb ? 0 : insets.top;
 
   const iconProps = useMemo(
     () => ({

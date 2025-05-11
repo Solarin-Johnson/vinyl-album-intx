@@ -1,5 +1,5 @@
 import React from "react";
-import { StyleSheet, useWindowDimensions } from "react-native";
+import { StyleSheet } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import Animated, {
   useAnimatedScrollHandler,
@@ -8,7 +8,7 @@ import Animated, {
 } from "react-native-reanimated";
 import { Stack } from "expo-router";
 import Header from "@/components/ui/Header";
-import { ALBUM_PEEK_HEIGHT, layoutConfig, VINYL_PAD } from "@/constants";
+import { ALBUM_PEEK_HEIGHT, isWeb, layoutConfig, VINYL_PAD } from "@/constants";
 import { useSize } from "@/hooks/useSize";
 import Vinyl from "@/components/ui/Vinyl";
 import { ALBUM } from "@/constants/data";
@@ -59,8 +59,7 @@ export default function Index() {
         <Animated.ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{
-            paddingTop: HEADER_FULL_HEIGHT + VINYL_PAD / 2,
-            // minHeight: "100%",
+            paddingTop: HEADER_FULL_HEIGHT + VINYL_PAD,
           }}
           layout={layoutConfig}
           showsVerticalScrollIndicator={false}
@@ -81,6 +80,7 @@ export default function Index() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    overflow: "hidden",
   },
   text: {
     fontSize: 24,

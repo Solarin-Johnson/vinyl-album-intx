@@ -1,11 +1,11 @@
 import { StyleSheet, View } from "react-native";
-import React from "react";
+import React, { useEffect } from "react";
 import Animated, {
-  FadeInDown,
   runOnUI,
   SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
+  useDerivedValue,
   useSharedValue,
   withDecay,
   withDelay,
@@ -14,19 +14,13 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSize } from "@/hooks/useSize";
-import {
-  applySpringConfig,
-  isWeb,
-  layoutConfig,
-  SPRING_CONFIG,
-  VINYL_PAD,
-} from "@/constants";
+import { isWeb, layoutConfig, SPRING_CONFIG, VINYL_PAD } from "@/constants";
 import { Image } from "expo-image";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-const SLIDE_FACTOR = isWeb ? 0.005 : 0.01;
+const SLIDE_FACTOR = 0.01;
 
 export default function Vinyl({
   opened,
@@ -42,6 +36,22 @@ export default function Vinyl({
   const revealed = useSharedValue<boolean>(false);
   const pressScale = useSharedValue<number>(1);
   const hasSequence = useSharedValue<boolean>(false);
+  const [opacity, loaded1, loaded2] = [
+    useSharedValue(0),
+    useSharedValue(false),
+    useSharedValue(false),
+  ];
+
+  useDerivedValue(
+    () =>
+      loaded1.value &&
+      loaded2.value &&
+      (opacity.value = withTiming(1, { duration: 250 }))
+  );
+
+  useEffect(() => {
+    Image.prefetch(imageUrl).then(() => (loaded1.value = true));
+  }, []);
 
   const tap = Gesture.Tap()
     .maxDeltaX(10)
@@ -110,12 +120,13 @@ export default function Vinyl({
   const animatedStyle = useAnimatedStyle(() => {
     return {
       height: withDelay(
-        opened.value ? 0 : 400,
+        opened.value || !hasSequence.value ? 0 : 400,
         withSpring(
           opened.value ? VINYL_HEIGHT_OPEN : VINYL_HEIGHT_CLOSED,
           isWeb ? SPRING_CONFIG : { duration: 0 }
         )
       ),
+      opacity: withSpring(opacity.value, SPRING_CONFIG),
     };
   });
 
@@ -149,6 +160,8 @@ export default function Vinyl({
         },
         { scale: withTiming(pressScale.value, { duration: 150 }) },
       ],
+      height: VINYL_HEIGHT,
+      width: VINYL_HEIGHT / 1.1,
     };
   });
 
@@ -181,6 +194,10 @@ export default function Vinyl({
         opened.value ? 600 : 0,
         withTiming(opened.value ? 1 : 0, { duration: 0 })
       ),
+      ...(isWeb && {
+        height: VINYL_HEIGHT,
+        top: VINYL_HEIGHT / 2,
+      }),
     };
   });
 
@@ -188,7 +205,6 @@ export default function Vinyl({
     <Animated.View
       layout={layoutConfig}
       style={[styles.container, animatedStyle]}
-      entering={applySpringConfig(FadeInDown)}
     >
       <GestureDetector gesture={composed}>
         <View
@@ -201,10 +217,10 @@ export default function Vinyl({
           <Animated.View
             style={[
               {
-                height: VINYL_HEIGHT,
                 pointerEvents: "none",
                 alignItems: "center",
                 position: "absolute",
+                height: VINYL_HEIGHT,
                 top: VINYL_HEIGHT / 2,
               },
               diskAnimatedStyle,
@@ -222,7 +238,6 @@ export default function Vinyl({
               {
                 flex: 1,
                 alignItems: "center",
-                height: VINYL_HEIGHT,
                 pointerEvents: "none",
                 zIndex: 10,
               },
@@ -232,10 +247,8 @@ export default function Vinyl({
             <Animated.View
               style={[
                 {
-                  height: VINYL_HEIGHT,
                   borderRadius: 80,
                   position: "absolute",
-                  width: VINYL_HEIGHT / 1.1,
                   alignItems: "center",
                   boxShadow: "0px 25px 30px #00000030",
                 },
@@ -245,10 +258,12 @@ export default function Vinyl({
               <AnimatedImage
                 source={imageUrl}
                 style={[styles.image, coverImageAnimatedStyle]}
+                onLoad={() => (loaded1.value = true)}
               />
               <AnimatedImage
                 source={require("@/assets/images/wrap-texture.png")}
                 style={[styles.image, styles.texture, textureAnimatedStyle]}
+                onLoad={() => (loaded2.value = true)}
                 tintColor={"#ffffff"}
               />
             </Animated.View>

@@ -36,7 +36,8 @@ export default function AlbumDetails({
   liked,
   discs,
 }: Album) {
-  const bottom = isWeb ? 24 : useSafeAreaInsets().bottom;
+  const insets = useSafeAreaInsets();
+  const bottom = isWeb ? 24 : insets.bottom;
 
   return (
     <Animated.View
@@ -63,7 +64,9 @@ const AlbumHead = ({
   const { VINYL_HEIGHT } = useSize();
   const bg = useThemeColor({}, "background");
   const text = useThemeColor({}, "text");
-  const bottom = isWeb ? 24 : useSafeAreaInsets().bottom;
+  const insets = useSafeAreaInsets();
+
+  const bottom = isWeb ? 24 : insets.bottom;
 
   const formattedPrice = React.useMemo(() => {
     return new Intl.NumberFormat("en-US", {

@@ -9,7 +9,7 @@ export const SPRING_CONFIG = {
 
 export const isWeb = Platform.OS === "web";
 
-export const VINYL_PAD = isWeb ? 24 : 20;
+export const VINYL_PAD = 20;
 export const ALBUM_PEEK_HEIGHT = 150;
 export const HEADER_HEIGHT = 42;
 
