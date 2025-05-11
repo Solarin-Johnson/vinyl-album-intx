@@ -5,10 +5,22 @@ import AntDesign from "@expo/vector-icons/AntDesign";
 import Feather from "@expo/vector-icons/Feather";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { SharedValue } from "react-native-reanimated";
+import Animated, {
+  interpolateColor,
+  SharedValue,
+  useAnimatedStyle,
+  useDerivedValue,
+  withTiming,
+} from "react-native-reanimated";
 import { HEADER_HEIGHT, isWeb } from "@/constants";
+import { Image } from "expo-image";
+import { ThemedText } from "../ThemedText";
 
-const Header: React.FC<{ show: SharedValue<boolean> }> = ({ show }) => {
+const Header: React.FC<{
+  show: SharedValue<boolean>;
+  imageUrl?: string;
+  title?: string;
+}> = ({ show, imageUrl, title }) => {
   const bg = useThemeColor({}, "background");
   const text = useThemeColor({}, "text");
   const { top } = useSafeAreaInsets();
@@ -21,19 +33,53 @@ const Header: React.FC<{ show: SharedValue<boolean> }> = ({ show }) => {
     [text]
   );
 
+  const animatedStyle = useAnimatedStyle(() => {
+    return {
+      opacity: withTiming(show.value ? 1 : 0),
+    };
+  });
+
   return (
     <View
-      style={{
-        // backgroundColor: bg,
-        paddingTop: isWeb ? 24 : top + 16,
-      }}
+      style={[
+        {
+          paddingTop: isWeb ? 24 : top + 16,
+        },
+        animatedStyle,
+      ]}
     >
-      <View style={styles.container}>
+      <Animated.View
+        style={[styles.overlay, { backgroundColor: bg }, animatedStyle]}
+      />
+      <View
+        style={[styles.container, { transform: [{ translateY: -top / 4 }] }]}
+      >
         <HeaderButton>
           <AntDesign name="arrowleft" {...iconProps} />
         </HeaderButton>
+        <Animated.View
+          style={[
+            {
+              height: "100%",
+              alignItems: "center",
+              flexDirection: "row",
+              gap: 8,
+            },
+            animatedStyle,
+          ]}
+        >
+          <Image
+            source={imageUrl}
+            style={{
+              width: HEADER_HEIGHT * 0.7,
+              height: HEADER_HEIGHT * 0.7,
+              borderRadius: 4,
+            }}
+          />
+          {title && <ThemedText type="defaultSemiBold">{title}</ThemedText>}
+        </Animated.View>
         <HeaderButton>
-          <Feather name="more-horizontal" {...iconProps} />
+          <Feather name="plus" {...iconProps} />
         </HeaderButton>
       </View>
     </View>
@@ -46,7 +92,10 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     flexDirection: "row",
     justifyContent: "space-between",
-    // alignItems: "center",
+    alignItems: "center",
+  },
+  overlay: {
+    ...StyleSheet.absoluteFillObject,
   },
 });
 

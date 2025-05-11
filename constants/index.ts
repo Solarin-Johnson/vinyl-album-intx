@@ -11,9 +11,17 @@ export const isWeb = Platform.OS === "web";
 
 export const VINYL_PAD = isWeb ? 24 : 20;
 export const ALBUM_PEEK_HEIGHT = 150;
-export const HEADER_HEIGHT = 32;
+export const HEADER_HEIGHT = 42;
 
-export const layoutConfig = LinearTransition.springify()
-  .damping(SPRING_CONFIG.damping)
-  .stiffness(SPRING_CONFIG.stiffness)
-  .mass(SPRING_CONFIG.mass);
+export const applySpringConfig = (
+  animation: any,
+  config: { damping: number; stiffness: number; mass?: number } = SPRING_CONFIG
+) => {
+  return animation
+    .springify()
+    .damping(config.damping)
+    .stiffness(config.stiffness)
+    .mass(config.mass);
+};
+
+export const layoutConfig = applySpringConfig(LinearTransition);

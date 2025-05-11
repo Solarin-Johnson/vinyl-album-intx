@@ -15,6 +15,7 @@ import { View } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import Header from "@/components/ui/Header";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -61,6 +62,8 @@ export default function RootLayout() {
               name="index"
               options={{
                 headerShadowVisible: false,
+                headerShown: false,
+                headerTransparent: true,
                 headerStyle: {
                   backgroundColor: bg,
                 },

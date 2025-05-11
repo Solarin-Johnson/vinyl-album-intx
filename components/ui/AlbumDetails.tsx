@@ -3,8 +3,6 @@ import {
   Pressable,
   StyleProp,
   StyleSheet,
-  Text,
-  useWindowDimensions,
   View,
   ViewStyle,
 } from "react-native";
@@ -43,7 +41,7 @@ export default function AlbumDetails({
   return (
     <Animated.View
       layout={layoutConfig}
-      style={[styles.container, { paddingBottom: bottom }]}
+      style={[styles.container, { paddingBottom: VINYL_PAD + bottom }]}
     >
       <AlbumHead {...{ title, artist, price, liked }} />
       <AlbumTracks discs={discs} />
@@ -147,9 +145,6 @@ const Button = ({
 };
 
 const AlbumTracks = ({ discs }: { discs: Disc[] }) => {
-  const { width } = useWindowDimensions();
-  const text = useThemeColor({}, "text");
-
   return (
     <View
       style={{
@@ -165,12 +160,10 @@ const AlbumTracks = ({ discs }: { discs: Disc[] }) => {
 };
 
 const DiscCluster = ({
-  discNumber,
   title,
   hasHead,
   tracks,
 }: Disc & { hasHead: boolean }) => {
-  const { width } = useWindowDimensions();
   const text = useThemeColor({}, "text");
 
   return (
@@ -213,8 +206,6 @@ const DiscCluster = ({
 };
 
 const TrackCard = ({ trackNumber, title, duration }: Track) => {
-  const text = useThemeColor({}, "text");
-
   return (
     <View
       style={{
@@ -224,7 +215,10 @@ const TrackCard = ({ trackNumber, title, duration }: Track) => {
         gap: 12,
       }}
     >
-      <ThemedText mono style={{ opacity: 0.5, fontSize: 15 }}>
+      <ThemedText
+        mono
+        style={{ opacity: 0.5, fontSize: 15, paddingHorizontal: 3 }}
+      >
         {String(trackNumber).padStart(2, "0")}
       </ThemedText>
       <View

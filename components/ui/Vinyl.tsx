@@ -1,21 +1,21 @@
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, View } from "react-native";
 import React from "react";
 import Animated, {
+  FadeInDown,
+  runOnUI,
   SharedValue,
   useAnimatedReaction,
   useAnimatedStyle,
-  useDerivedValue,
   useSharedValue,
   withDecay,
   withDelay,
   withSequence,
   withSpring,
-  WithSpringConfig,
   withTiming,
 } from "react-native-reanimated";
 import { useSize } from "@/hooks/useSize";
 import {
-  HEADER_HEIGHT,
+  applySpringConfig,
   isWeb,
   layoutConfig,
   SPRING_CONFIG,
@@ -23,11 +23,10 @@ import {
 } from "@/constants";
 import { Image } from "expo-image";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
-import { useThemeColor } from "@/hooks/useThemeColor";
 
 const AnimatedImage = Animated.createAnimatedComponent(Image);
 
-const SLIDE_FACTOR = 0.01;
+const SLIDE_FACTOR = isWeb ? 0.005 : 0.01;
 
 export default function Vinyl({
   opened,
@@ -38,16 +37,11 @@ export default function Vinyl({
   imageUrl: string;
   scrollY: SharedValue<number>;
 }) {
-  const {
-    VINYL_HEIGHT_OPEN,
-    VINYL_HEIGHT_CLOSED,
-    VINYL_HEIGHT,
-    HEADER_FULL_HEIGHT,
-  } = useSize();
-  const bg = useThemeColor({}, "background");
+  const { VINYL_HEIGHT_OPEN, VINYL_HEIGHT_CLOSED, VINYL_HEIGHT } = useSize();
   const offset = useSharedValue<number>(1);
   const revealed = useSharedValue<boolean>(false);
   const pressScale = useSharedValue<number>(1);
+  const hasSequence = useSharedValue<boolean>(false);
 
   const tap = Gesture.Tap()
     .maxDeltaX(10)
@@ -60,6 +54,7 @@ export default function Vinyl({
       pressScale.value = 1;
       if (revealed.value) return;
       opened.value = !opened.value;
+      offset.value = 0;
     });
 
   const pan = Gesture.Pan()
@@ -70,7 +65,7 @@ export default function Vinyl({
     })
     .onEnd((e) => {
       const factor = 80;
-      const snap_end = -VINYL_HEIGHT * 1.15;
+      const snap_end = -VINYL_HEIGHT * 1.1;
 
       const isValidSlide =
         offset.value < (revealed.value ? snap_end + factor : -factor);
@@ -92,6 +87,24 @@ export default function Vinyl({
       pressScale.value = 1;
     });
 
+  useAnimatedReaction(
+    () => opened.value,
+    (opened, prev) => {
+      if (opened !== prev && prev !== null) {
+        hasSequence.value = true;
+        console.log(opened, prev);
+
+        isWeb &&
+          runOnUI(() => {
+            setTimeout(() => {
+              hasSequence.value = false;
+              console.log("false");
+            }, 600);
+          })();
+      }
+    }
+  );
+
   const composed = Gesture.Simultaneous(pan, tap);
 
   const animatedStyle = useAnimatedStyle(() => {
@@ -106,18 +119,16 @@ export default function Vinyl({
     };
   });
 
-  const textureTranslateY = useDerivedValue(() => {
-    return withSequence(
-      withSpring(VINYL_HEIGHT + VINYL_PAD, SPRING_CONFIG),
-      withSpring(opened.value ? 0 : 0, SPRING_CONFIG)
-    );
-  });
-
   const textureAnimatedStyle = useAnimatedStyle(() => {
     return {
       transform: [
         {
-          translateY: textureTranslateY.value,
+          translateY: hasSequence.value
+            ? withSequence(
+                withSpring(VINYL_HEIGHT + VINYL_PAD, SPRING_CONFIG),
+                withSpring(opened.value ? 0 : 0, SPRING_CONFIG)
+              )
+            : 0,
         },
       ],
       zIndex: withDelay(
@@ -177,6 +188,7 @@ export default function Vinyl({
     <Animated.View
       layout={layoutConfig}
       style={[styles.container, animatedStyle]}
+      entering={applySpringConfig(FadeInDown)}
     >
       <GestureDetector gesture={composed}>
         <View

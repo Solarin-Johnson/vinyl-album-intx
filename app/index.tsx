@@ -2,12 +2,13 @@ import React from "react";
 import { StyleSheet, useWindowDimensions } from "react-native";
 import { ThemedView } from "@/components/ThemedView";
 import Animated, {
+  useAnimatedScrollHandler,
   useDerivedValue,
   useSharedValue,
 } from "react-native-reanimated";
 import { Stack } from "expo-router";
 import Header from "@/components/ui/Header";
-import { layoutConfig, VINYL_PAD } from "@/constants";
+import { ALBUM_PEEK_HEIGHT, layoutConfig, VINYL_PAD } from "@/constants";
 import { useSize } from "@/hooks/useSize";
 import Vinyl from "@/components/ui/Vinyl";
 import { ALBUM } from "@/constants/data";
@@ -16,14 +17,26 @@ import AlbumDetails from "@/components/ui/AlbumDetails";
 export default function Index() {
   const scrollY = useSharedValue(0);
   const vinylOpened = useSharedValue(false);
-  const { VINYL_HEIGHT_OPEN, VINYL_HEIGHT_CLOSED, HEADER_FULL_HEIGHT } =
-    useSize();
+  const {
+    VINYL_HEIGHT_OPEN,
+    VINYL_HEIGHT_CLOSED,
+    HEADER_FULL_HEIGHT,
+    VINYL_HEIGHT,
+  } = useSize();
+
+  const scrollHandler = useAnimatedScrollHandler({
+    onScroll: (event) => {
+      const y = event.contentOffset.y;
+      scrollY.value = y;
+    },
+  });
 
   const showHeader = useDerivedValue(
     () =>
       scrollY.value >=
-      (vinylOpened ? VINYL_HEIGHT_OPEN : VINYL_HEIGHT_CLOSED) -
-        HEADER_FULL_HEIGHT
+      (vinylOpened.value ? VINYL_HEIGHT_OPEN : VINYL_HEIGHT_CLOSED) -
+        HEADER_FULL_HEIGHT +
+        ALBUM_PEEK_HEIGHT
   );
 
   return (
@@ -31,7 +44,14 @@ export default function Index() {
       <Stack.Screen
         name="index"
         options={{
-          header: () => <Header show={showHeader} />,
+          headerShown: true,
+          header: () => (
+            <Header
+              show={showHeader}
+              imageUrl={ALBUM.coverUrl}
+              title={ALBUM.title}
+            />
+          ),
           headerTransparent: true,
         }}
       />
@@ -44,6 +64,7 @@ export default function Index() {
           }}
           layout={layoutConfig}
           showsVerticalScrollIndicator={false}
+          onScroll={scrollHandler}
         >
           <Vinyl
             opened={vinylOpened}
