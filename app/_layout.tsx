@@ -21,7 +21,13 @@ SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const colorScheme = useColorScheme();
-  const [loaded] = useFonts({});
+  const [loaded] = useFonts({
+    InterMedium: require("../assets/fonts/Inter-Medium.ttf"),
+    InterSemiBold: require("../assets/fonts/Inter-SemiBold.ttf"),
+    InterBold: require("../assets/fonts/Inter-Bold.ttf"),
+    NotoSerifBold: require("../assets/fonts/NotoSerif-Bold.ttf"),
+    GeistMonoSemiBold: require("../assets/fonts/GeistMono-SemiBold.ttf"),
+  });
   const bg = useThemeColor({}, "background");
 
   useEffect(() => {

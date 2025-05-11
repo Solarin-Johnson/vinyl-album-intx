@@ -14,7 +14,13 @@ import Animated, {
   withTiming,
 } from "react-native-reanimated";
 import { useSize } from "@/hooks/useSize";
-import { layoutConfig, SPRING_CONFIG, VINYL_PAD } from "@/constants";
+import {
+  HEADER_HEIGHT,
+  isWeb,
+  layoutConfig,
+  SPRING_CONFIG,
+  VINYL_PAD,
+} from "@/constants";
 import { Image } from "expo-image";
 import { Gesture, GestureDetector } from "react-native-gesture-handler";
 import { useThemeColor } from "@/hooks/useThemeColor";
@@ -26,11 +32,18 @@ const SLIDE_FACTOR = 0.01;
 export default function Vinyl({
   opened,
   imageUrl,
+  scrollY,
 }: {
   opened: SharedValue<boolean>;
   imageUrl: string;
+  scrollY: SharedValue<number>;
 }) {
-  const { VINYL_HEIGHT_OPEN, VINYL_HEIGHT_CLOSED, VINYL_HEIGHT } = useSize();
+  const {
+    VINYL_HEIGHT_OPEN,
+    VINYL_HEIGHT_CLOSED,
+    VINYL_HEIGHT,
+    HEADER_FULL_HEIGHT,
+  } = useSize();
   const bg = useThemeColor({}, "background");
   const offset = useSharedValue<number>(1);
   const revealed = useSharedValue<boolean>(false);
@@ -83,7 +96,13 @@ export default function Vinyl({
 
   const animatedStyle = useAnimatedStyle(() => {
     return {
-      height: opened.value ? VINYL_HEIGHT_OPEN : VINYL_HEIGHT_CLOSED,
+      height: withDelay(
+        opened.value ? 0 : 400,
+        withSpring(
+          opened.value ? VINYL_HEIGHT_OPEN : VINYL_HEIGHT_CLOSED,
+          isWeb ? SPRING_CONFIG : { duration: 0 }
+        )
+      ),
     };
   });
 
@@ -193,6 +212,7 @@ export default function Vinyl({
                 alignItems: "center",
                 height: VINYL_HEIGHT,
                 pointerEvents: "none",
+                zIndex: 10,
               },
               revealCoverAnimatedStyle,
             ]}
@@ -205,7 +225,7 @@ export default function Vinyl({
                   position: "absolute",
                   width: VINYL_HEIGHT / 1.1,
                   alignItems: "center",
-                  boxShadow: "0px 30px 30px #00000030",
+                  boxShadow: "0px 25px 30px #00000030",
                 },
                 coverAnimatedStyle,
               ]}
@@ -230,7 +250,6 @@ export default function Vinyl({
 const styles = StyleSheet.create({
   container: {
     paddingHorizontal: 16,
-    marginTop: VINYL_PAD,
     alignItems: "center",
   },
   image: {
@@ -245,6 +264,6 @@ const styles = StyleSheet.create({
     position: "absolute",
     backgroundColor: "#80808030",
     // top: "105%",
-    boxShadow: "0px 5px 8px #00000015",
+    boxShadow: "0px 0px 15px #00000020",
   },
 });

@@ -1,106 +1,88 @@
-type Track = {
+export interface Track {
   trackNumber: number;
   title: string;
   duration: string;
   featuredArtists?: string[];
-};
+}
 
-type Disc = {
+export interface Disc {
   discNumber: number;
   title?: string;
   tracks: Track[];
-};
+}
 
-type Album = {
+export interface Album {
   albumId: string;
   title: string;
+  price: number;
   artist: string;
+  liked: boolean;
   releaseDate: string;
   coverUrl: string;
   discs: Disc[];
-};
+}
 
 export const ALBUM: Album = {
-  albumId: "kendrick_mr_morale_2022",
-  title: "Mr. Morale & The Big Steppers",
+  albumId: "kendrick_gnx_2024",
+  title: "GNX",
   artist: "Kendrick Lamar",
-  releaseDate: "2022-05-13",
-  coverUrl: "https://i.scdn.co/image/ab67616d0000b2732e02117d76426a08ac7c174f",
+  price: 39.99,
+  liked: false,
+  releaseDate: "2024-11-22",
+  coverUrl: "https://i.scdn.co/image/ab67616d0000b273d9985092cd88bffd97653b58",
   discs: [
     {
       discNumber: 1,
-      title: "Big Steppers",
+      title: "GNX",
       tracks: [
-        { trackNumber: 1, title: "United In Grief", duration: "4:15" },
-        { trackNumber: 2, title: "N95", duration: "3:15" },
-        { trackNumber: 3, title: "Worldwide Steppers", duration: "3:23" },
+        { trackNumber: 1, title: "Wacced Out Murals", duration: "5:17" },
+        { trackNumber: 2, title: "Squabble Up", duration: "2:37" },
         {
-          trackNumber: 4,
-          title: "Die Hard",
-          duration: "3:59",
-          featuredArtists: ["Blxst", "Amanda Reifer"],
+          trackNumber: 3,
+          title: "Luther",
+          duration: "2:57",
+          featuredArtists: ["SZA"],
         },
+        { trackNumber: 4, title: "Man at the Garden", duration: "3:53" },
         {
           trackNumber: 5,
-          title: "Father Time",
-          duration: "3:42",
-          featuredArtists: ["Sampha"],
+          title: "Hey Now",
+          duration: "3:37",
+          featuredArtists: ["Dody6"],
         },
-        { trackNumber: 6, title: "Rich (Interlude)", duration: "1:43" },
-        { trackNumber: 7, title: "Rich Spirit", duration: "3:22" },
+        { trackNumber: 6, title: "Reincarnated", duration: "4:12" },
+        {
+          trackNumber: 7,
+          title: "TV Off",
+          duration: "3:45",
+          featuredArtists: ["Lefty Gunplay"],
+        },
         {
           trackNumber: 8,
-          title: "We Cry Together",
-          duration: "5:41",
-          featuredArtists: ["Taylour Paige"],
+          title: "Dodger Blue",
+          duration: "4:10",
+          featuredArtists: ["Wallie the Sensei", "Roddy Ricch", "Siete7x"],
         },
         {
           trackNumber: 9,
-          title: "Purple Hearts",
-          duration: "5:29",
-          featuredArtists: ["Summer Walker", "Ghostface Killah"],
+          title: "Peekaboo",
+          duration: "3:30",
+          featuredArtists: ["AZChike"],
+        },
+        { trackNumber: 10, title: "Heart Pt. 6", duration: "4:05" },
+        {
+          trackNumber: 11,
+          title: "GNX",
+          duration: "3:50",
+          featuredArtists: ["Hitta J3", "YoungThreat", "Peysoh"],
+        },
+        {
+          trackNumber: 12,
+          title: "Gloria",
+          duration: "4:20",
+          featuredArtists: ["SZA"],
         },
       ],
-    },
-    {
-      discNumber: 2,
-      title: "Mr. Morale",
-      tracks: [
-        { trackNumber: 1, title: "Count Me Out", duration: "4:43" },
-        { trackNumber: 2, title: "Crown", duration: "4:24" },
-        {
-          trackNumber: 3,
-          title: "Silent Hill",
-          duration: "3:40",
-          featuredArtists: ["Kodak Black"],
-        },
-        { trackNumber: 4, title: "Savior (Interlude)", duration: "2:32" },
-        {
-          trackNumber: 5,
-          title: "Savior",
-          duration: "3:44",
-          featuredArtists: ["Baby Keem", "Sam Dew"],
-        },
-        { trackNumber: 6, title: "Auntie Diaries", duration: "4:41" },
-        {
-          trackNumber: 7,
-          title: "Mr. Morale",
-          duration: "3:31",
-          featuredArtists: ["Tanna Leone"],
-        },
-        {
-          trackNumber: 8,
-          title: "Mother I Sober",
-          duration: "6:47",
-          featuredArtists: ["Beth Gibbons"],
-        },
-        { trackNumber: 9, title: "Mirror", duration: "4:16" },
-      ],
-    },
-    {
-      discNumber: 3,
-      title: "Bonus Disc",
-      tracks: [{ trackNumber: 1, title: "The Heart Part 5", duration: "5:32" }],
     },
   ],
 };

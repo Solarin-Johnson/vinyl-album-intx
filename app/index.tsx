@@ -7,10 +7,11 @@ import Animated, {
 } from "react-native-reanimated";
 import { Stack } from "expo-router";
 import Header from "@/components/ui/Header";
-import { layoutConfig } from "@/constants";
+import { layoutConfig, VINYL_PAD } from "@/constants";
 import { useSize } from "@/hooks/useSize";
 import Vinyl from "@/components/ui/Vinyl";
 import { ALBUM } from "@/constants/data";
+import AlbumDetails from "@/components/ui/AlbumDetails";
 
 export default function Index() {
   const scrollY = useSharedValue(0);
@@ -38,12 +39,18 @@ export default function Index() {
         <Animated.ScrollView
           style={{ flex: 1 }}
           contentContainerStyle={{
-            paddingTop: HEADER_FULL_HEIGHT,
-            minHeight: "100%",
+            paddingTop: HEADER_FULL_HEIGHT + VINYL_PAD / 2,
+            // minHeight: "100%",
           }}
           layout={layoutConfig}
+          showsVerticalScrollIndicator={false}
         >
-          <Vinyl opened={vinylOpened} imageUrl={ALBUM.coverUrl} />
+          <Vinyl
+            opened={vinylOpened}
+            imageUrl={ALBUM.coverUrl}
+            scrollY={scrollY}
+          />
+          <AlbumDetails {...ALBUM} />
         </Animated.ScrollView>
       </ThemedView>
     </>

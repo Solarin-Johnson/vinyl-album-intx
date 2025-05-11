@@ -5,6 +5,8 @@ export type ThemedTextProps = TextProps & {
   lightColor?: string;
   darkColor?: string;
   type?: "default" | "title" | "defaultSemiBold" | "subtitle" | "link";
+  serif?: boolean;
+  mono?: boolean;
 };
 
 export function ThemedText({
@@ -12,6 +14,8 @@ export function ThemedText({
   lightColor,
   darkColor,
   type = "default",
+  serif,
+  mono,
   ...rest
 }: ThemedTextProps) {
   const color = useThemeColor({ light: lightColor, dark: darkColor }, "text");
@@ -19,7 +23,7 @@ export function ThemedText({
   return (
     <Text
       style={[
-        { color, fontFamily: "RobotoMedium" },
+        { color, fontFamily: serif ? "NotoSerifBold" : mono ?'GeistMonoSemiBold' : "InterMedium" },
         type === "default" ? styles.default : undefined,
         type === "title" ? styles.title : undefined,
         type === "defaultSemiBold" ? styles.defaultSemiBold : undefined,
@@ -35,17 +39,14 @@ export function ThemedText({
 const styles = StyleSheet.create({
   default: {
     fontSize: 16,
-    lineHeight: 28,
   },
   defaultSemiBold: {
     fontSize: 16,
-    lineHeight: 24,
-    fontWeight: "600",
+    fontFamily: "InterSemiBold",
   },
   title: {
     fontSize: 32,
-    fontWeight: "bold",
-    lineHeight: 32,
+    fontFamily: "InterSemiBold",
   },
   subtitle: {
     fontSize: 15,

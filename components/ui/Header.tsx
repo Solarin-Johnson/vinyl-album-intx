@@ -6,7 +6,7 @@ import Feather from "@expo/vector-icons/Feather";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { useSafeAreaInsets } from "react-native-safe-area-context";
 import { SharedValue } from "react-native-reanimated";
-import { isWeb } from "@/constants";
+import { HEADER_HEIGHT, isWeb } from "@/constants";
 
 const Header: React.FC<{ show: SharedValue<boolean> }> = ({ show }) => {
   const bg = useThemeColor({}, "background");
@@ -22,7 +22,12 @@ const Header: React.FC<{ show: SharedValue<boolean> }> = ({ show }) => {
   );
 
   return (
-    <View style={{ backgroundColor: bg, paddingTop: isWeb ? 24 : top + 16 }}>
+    <View
+      style={{
+        // backgroundColor: bg,
+        paddingTop: isWeb ? 24 : top + 16,
+      }}
+    >
       <View style={styles.container}>
         <HeaderButton>
           <AntDesign name="arrowleft" {...iconProps} />
@@ -37,6 +42,7 @@ const Header: React.FC<{ show: SharedValue<boolean> }> = ({ show }) => {
 
 const styles = StyleSheet.create({
   container: {
+    height: HEADER_HEIGHT,
     paddingHorizontal: 16,
     flexDirection: "row",
     justifyContent: "space-between",
