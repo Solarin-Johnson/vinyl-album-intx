@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "expo-boilerplate",
-    "slug": "expo-boilerplate",
+    "name": "vinyl-album-intx",
+    "slug": "vinyl-album-intx",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
@@ -40,6 +40,9 @@
     "extra": {
       "router": {
         "origin": false
+      },
+      "eas": {
+        "projectId": "4d82ccac-8e4c-4bfd-a4ee-7627d80d3462"
       }
     }
   }

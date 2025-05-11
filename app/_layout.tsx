@@ -16,6 +16,7 @@ import { ThemedView } from "@/components/ThemedView";
 import { useThemeColor } from "@/hooks/useThemeColor";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
 import Header from "@/components/ui/Header";
+import Head from "expo-router/head";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
@@ -52,28 +53,70 @@ export default function RootLayout() {
   }
 
   return (
-    <GestureHandlerRootView style={{ flex: 1 }}>
-      <SafeAreaProvider>
-        <ThemeProvider
-          value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
-        >
-          <Stack>
-            <Stack.Screen
-              name="index"
-              options={{
-                headerShadowVisible: false,
-                headerShown: false,
-                headerTransparent: true,
-                headerStyle: {
-                  backgroundColor: bg,
-                },
-              }}
-            />
-          </Stack>
+    <>
+      <HeadComponent />
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaProvider>
+          <ThemeProvider
+            value={colorScheme === "dark" ? DarkTheme : DefaultTheme}
+          >
+            <Stack>
+              <Stack.Screen
+                name="index"
+                options={{
+                  headerShadowVisible: false,
+                  headerShown: false,
+                  headerTransparent: true,
+                  headerStyle: {
+                    backgroundColor: bg,
+                  },
+                }}
+              />
+            </Stack>
+          </ThemeProvider>
+        </SafeAreaProvider>
+        <StatusBar style="auto" />
+      </GestureHandlerRootView>
+    </>
+  );
+}
 
-          <StatusBar style="auto" />
-        </ThemeProvider>
-      </SafeAreaProvider>
-    </GestureHandlerRootView>
+function HeadComponent() {
+  return (
+    <Head>
+      <title>Vinyl Album</title>
+      <meta
+        name="description"
+        content="An interactive vinyl album built with Expo and Reanimated"
+      />
+      <meta name="color-scheme" content="light dark" />
+
+      {/* Open Graph / Facebook */}
+      <meta
+        name="og:image"
+        content="https://raw.githubusercontent.com/Solarin-Johnson/vinyl-album-intx/refs/heads/main/assets/images/twitter-cover.png"
+      />
+      <meta property="og:image:width" content="1200" />
+      <meta property="og:image:height" content="675" />
+      <meta property="og:title" content="Vinyl Album" />
+      <meta
+        property="og:description"
+        content="An interactive vinyl album built with Expo and Reanimated"
+      />
+      <meta property="og:url" content="https://vinyl-album-intx.expo.app" />
+      <meta property="og:type" content="music.album" />
+
+      {/* Twitter */}
+      <meta
+        name="twitter:image"
+        content="https://raw.githubusercontent.com/Solarin-Johnson/vinyl-album-intx/refs/heads/main/assets/images/twitter-cover.png"
+      />
+      <meta name="twitter:card" content="summary_large_image" />
+      <meta name="twitter:title" content="Vinyl Album" />
+      <meta
+        name="twitter:description"
+        content="An interactive vinyl album built with Expo and Reanimated"
+      />
+    </Head>
   );
 }

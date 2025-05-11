@@ -23,7 +23,7 @@ const Header: React.FC<{
 }> = ({ show, imageUrl, title }) => {
   const bg = useThemeColor({}, "background");
   const text = useThemeColor({}, "text");
-  const { top } = useSafeAreaInsets();
+  const top = isWeb ? 0 : useSafeAreaInsets().top;
 
   const iconProps = useMemo(
     () => ({
@@ -43,7 +43,8 @@ const Header: React.FC<{
     <View
       style={[
         {
-          paddingTop: isWeb ? 24 : top + 16,
+          paddingTop: top + 16,
+          paddingBottom: isWeb ? 12 : 0,
         },
         animatedStyle,
       ]}
